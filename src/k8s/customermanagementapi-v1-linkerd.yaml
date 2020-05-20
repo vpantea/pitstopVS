@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: customermanagementapi
+    system: pitstop
+    version: "1.0"
+  name: customermanagementapi-v1
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector: null
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: customermanagementapi
+        system: pitstop
+        version: "1.0"
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Production
+        image: pitstop/customermanagementapi:1.0
+        imagePullPolicy: IfNotPresent
+        name: customermanagementapi
+        ports:
+        - containerPort: 5100
+      restartPolicy: Always
+---

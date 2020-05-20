@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NotificationService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
