@@ -9,11 +9,13 @@ using Pitstop.Application.VehicleManagement.Events;
 using Pitstop.Application.VehicleManagement.Commands;
 using Pitstop.VehicleManagementAPI.Mappers;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pitstop.Application.VehicleManagement.Controllers
 {
 
     [Route("/api/[controller]")]
+    [Authorize]
     public class VehiclesController : Controller
     {
         private const string NUMBER_PATTERN = @"^((\d{1,3}|[a-z]{1,3})-){2}(\d{1,3}|[a-z]{1,3})$";

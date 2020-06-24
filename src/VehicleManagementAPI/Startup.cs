@@ -49,6 +49,20 @@ namespace Pitstop.Application.VehicleManagement
                 checks.WithDefaultCacheDuration(TimeSpan.FromSeconds(1));
                 checks.AddSqlCheck("VehicleManagementCN", _configuration.GetConnectionString("VehicleManagementCN"));
             });
+
+            #region borrowed from quickstart2nd api
+
+            // web_api is in this case an ApiResource VehicleManagementAPI himself (subsemnatul)
+            services.AddAuthentication("Bearer")
+                 .AddJwtBearer("Bearer", options =>
+                 {
+                     options.Authority = "http://localhost:5000";
+                     options.RequireHttpsMetadata = false;
+
+                     options.Audience = "web_api";
+                 });
+
+            #endregion borrowed from quickstart2nd api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,7 +90,13 @@ namespace Pitstop.Application.VehicleManagement
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetService<VehicleManagementDBContext>().MigrateDB();
-            }                     
+            }
+
+            #region borrowed from quickstart2nd api
+            app.UseAuthentication();
+            app.UseAuthorization();
+            #endregion borrowed from quickstart2nd api
+
         }
     }
 }

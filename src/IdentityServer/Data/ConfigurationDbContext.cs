@@ -209,7 +209,7 @@ namespace IdentityServer.Data
                     new ClientGrantType
                     {
                         Id = 3,
-                        GrantType = "hybrid",
+                        GrantType = "authorization_code",
                         ClientId = 3
                     },
                     new ClientGrantType
@@ -302,7 +302,7 @@ namespace IdentityServer.Data
                 new ClientPostLogoutRedirectUri
                 {
                     Id = 1,
-                    PostLogoutRedirectUri = "http://localhost:5002/signout-callback-oidc",
+                    PostLogoutRedirectUri = "http://localhost:7000/signout-callback-oidc",
                     ClientId = 3
                 },
                 new ClientPostLogoutRedirectUri
@@ -317,7 +317,7 @@ namespace IdentityServer.Data
                 new ClientRedirectUri
                 {
                     Id = 1,
-                    RedirectUri = "http://localhost:5002/signin-oidc",
+                    RedirectUri = "http://localhost:7000/signin-oidc",
                     ClientId = 3
                 },
                 new ClientRedirectUri

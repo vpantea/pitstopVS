@@ -7,6 +7,7 @@ using WebApp.RESTClients;
 using Serilog;
 using Microsoft.Extensions.HealthChecks;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PitStop
 {
@@ -23,9 +24,12 @@ namespace PitStop
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services
-            services
-                .AddMvc(options => options.EnableEndpointRouting = false)
-                .AddNewtonsoftJson();
+            //services
+            //    .AddMvc(options => options.EnableEndpointRouting = false)
+            //    .AddNewtonsoftJson();
+            // replaced with
+            services.AddControllersWithViews();
+
 
             // add custom services
             services.AddHttpClient<ICustomerManagementAPI, CustomerManagementAPI>();
@@ -38,6 +42,33 @@ namespace PitStop
                 checks.AddValueTaskCheck("HTTP Endpoint", () => new
                     ValueTask<IHealthCheckResult>(HealthCheckResult.Healthy("Ok")));
             });
+
+            #region borrowed from quickstart2nd MvcClient
+
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+            // "web_api is VehicleManagementAPI and mvc is WebApp
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = "http://localhost:5000";
+                    options.RequireHttpsMetadata = false;
+
+                    options.ClientId = "mvc";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = "code";
+
+                    options.SaveTokens = true;
+
+                    options.Scope.Add("web_api");
+                    options.Scope.Add("offline_access");
+                });
+            #endregion borrowed from quickstart2nd MvcClient
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,12 +92,26 @@ namespace PitStop
 
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
+            #region borrowed from quickstart2nd MvcClient
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            #endregion borrowed from quickstart2nd MvcClient
+
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //    //.RequireAuthorization
+            //});
+            // replaced with 
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute()
+                    .RequireAuthorization();
             });
+
         }
     }
 }

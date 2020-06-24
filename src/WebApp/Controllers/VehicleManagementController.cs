@@ -22,6 +22,7 @@ namespace PitStop.Controllers
             ICustomerManagementAPI customerManagementAPI, ILogger<VehicleManagementController> logger)
         {
             _vehicleManagementAPI = vehicleManagementAPI;
+            _vehicleManagementAPI.Parent = this as ControllerBase;
             _customerManagementAPI = customerManagementAPI;
             _logger = logger;
             _resiliencyHelper = new ResiliencyHelper(_logger);

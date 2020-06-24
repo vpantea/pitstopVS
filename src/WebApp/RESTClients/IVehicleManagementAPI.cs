@@ -1,4 +1,5 @@
-﻿using Pitstop.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Pitstop.Models;
 using Refit;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace WebApp.RESTClients
 
         [Post("/vehicles")]
         Task RegisterVehicle(RegisterVehicle command);
+
+        ControllerBase Parent { get; set; }
     }
 }
